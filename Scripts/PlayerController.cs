@@ -6,7 +6,7 @@ public class PlayerController : MonoBehaviour{
     private float horizontal;  
     private float _coyoteTime;
     private bool isJumpCut;
-    private bool canSetIsJumping;
+    private bool canCheckIsJump;
 
     [Header("Movement")]
     public float maxSpeed;
@@ -50,17 +50,15 @@ public class PlayerController : MonoBehaviour{
         currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, acceleration);
 
         if (IsGrounded()){
-            if(canSetIsJumping){
-                _coyoteTime = coyoteTime;
-                isJumping = false;
-            }
+            _coyoteTime = coyoteTime;
+            if(canCheckIsJump) isJumping = false;
             rb.gravityScale = gravity;
         }
         else{
             if (rb.linearVelocity.y < 0f && !isJumping){
                 _coyoteTime -= Time.deltaTime;
             }
-            canSetIsJumping = true;
+            canCheckIsJump = true;
         }
         if (Input.GetKeyDown(KeyCode.C)){
             _hangTime = hangTime;
@@ -73,7 +71,7 @@ public class PlayerController : MonoBehaviour{
                 isJumpCut = true;
                 rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpingPower);
                 isJumping = true;
-                canSetIsJumping = false;
+                canCheckIsJump = false;
                 _coyoteTime = 0f;
                 _hangTime = 0f;
             }    
